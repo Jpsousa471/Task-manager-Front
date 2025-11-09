@@ -1,12 +1,13 @@
-import { ModeToggle } from './components/mode-toggle'
-import { Button } from './components/ui/button'
+import { Header } from './components/header'
+import { PageContainer } from './components/page-container'
+import { PageContent } from './components/page-content'
 
 export function App() {
   return (
-    <div className='h-screen text-[28px] text-blue-900'>
-      <span className='text-blue-700'>Task Manager</span>
-      <Button />
-      <ModeToggle />
-    </div>
+    <PageContainer>
+      <PageContent>
+        <Header />
+      </PageContent>
+    </PageContainer>
   )
 }

@@ -4,6 +4,8 @@ import type {
   ContextProps,
   ContextProviderProps
 } from '@/interfaces/interfaces'
+import { ErrorPage } from '@/pages/error-page'
+import { Loading } from '@/pages/loading'
 import { getAllTasks } from '@/routes/get-all-task'
 
 const StateContext = createContext<ContextProps>({})
@@ -18,13 +20,13 @@ export const TasksDataContextProvider = ({
   })
 
   if (isLoading) {
-    return <div>Carregando...</div>
+    return <Loading />
   }
 
   if (isError) {
     // biome-ignore lint/suspicious/noConsole: <explanation>
     console.error(error)
-    return <div>Deu erro...</div>
+    return <ErrorPage />
   }
 
   if (!data) {

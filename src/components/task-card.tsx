@@ -95,7 +95,7 @@ export function TaskCard({ task }: TaskCardProps) {
           <CarouselContent>
             {task.images.map(image => (
               <CarouselItem key={image}>
-                <div className='relative'>
+                <div>
                   {/** biome-ignore lint/correctness/useImageSize: <explanation> */}
                   <img
                     alt={`Imagem asssociada á tarefa: ${task.title}`}

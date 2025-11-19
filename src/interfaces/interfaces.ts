@@ -42,6 +42,19 @@ export interface ContextProviderProps {
   children: ReactNode
 }
 
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
 export interface TaskCardProps {
   task: Task
+}
+
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
+export interface NewTask {
+  title: string
+  description: string
+  images: Array<string>
+}
+
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
+export interface CreateNewTaskProps {
+  task: NewTask
 }

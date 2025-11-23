@@ -58,3 +58,33 @@ export interface NewTask {
 export interface CreateNewTaskProps {
   task: NewTask
 }
+
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
+export interface UpdatedTask {
+  id: string
+  title: string
+  description: string
+  // biome-ignore lint/style/useConsistentArrayType: <explanation>
+  images: Array<string>
+}
+
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
+export interface UpdatedTaskFormProps {
+  task: UpdatedTask
+  onClose: () => void
+}
+
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
+export interface UpdatedTaskProps {
+  updatedTask: UpdatedTask
+}
+
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
+export interface DeleteTaskProps {
+  taskId: string
+}
+
+// biome-ignore lint/style/useConsistentTypeDefinitions: <explanation>
+export interface ChangeTaskCompletionProps {
+  taskId: string
+}

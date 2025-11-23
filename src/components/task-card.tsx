@@ -1,4 +1,8 @@
+import { useMutation } from '@tanstack/react-query'
+import type { AxiosError } from 'axios'
 import { CheckCircle, Circle, Edit, Trash } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,17 +37,59 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { useTasksContext } from '@/contexts/tasks-context'
 import type { TaskCardProps } from '@/interfaces/interfaces'
+import { changeTaskCompletion } from '@/routes/change-task-completion'
+import { deleteTask } from '@/routes/delete-task'
 import { Button } from './ui/button'
 import { Toggle } from './ui/toggle'
+import { UpdateTaskForm } from './update-task-form'
 
 export function TaskCard({ task }: TaskCardProps) {
+  const { refetchTaskData } = useTasksContext()
+
+  const { mutate: changeTaskCompletionRequest } = useMutation({
+    mutationFn: changeTaskCompletion,
+    onSuccess: () => {
+      toast.success('Tarefa concluída com sucesso')
+      refetchTaskData?.()
+    },
+    onError: (error: AxiosError) => {
+      // biome-ignore lint/suspicious/noConsole: <explanation>
+      console.error(error)
+      toast.error('Erro ao concluir tarefa tarefa')
+    }
+  })
+
+  const { mutate: deleteTaskRequest } = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      toast.success('Tarefa deletada com sucesso')
+      refetchTaskData?.()
+    },
+    onError: (error: AxiosError) => {
+      // biome-ignore lint/suspicious/noConsole: <explanation>
+      console.error(error)
+      toast.error('Erro ao deletar tarefa')
+    }
+  })
+
+  const [updateDialogIsOpen, setUpdateDialogIsOpen] = useState<boolean>(false)
+
+  const handleDeleteTask = () => {
+    deleteTaskRequest({ taskId: task.id })
+  }
+
+  const handleChangeTaskCompletion = () => {
+    changeTaskCompletionRequest({ taskId: task.id })
+  }
+
   return (
     <Card
-      className={`w-full max-w-[400px] ${task.completed ? 'border-red-800' : 'border-primary'}`}
+      className={`w-full max-w-[400px] ${task.completed ? 'border-primary' : 'border-red-800'}`}
     >
       <div className='absolute top-2 right-2 flex items-center gap-3'>
-        <Dialog>
+        <Dialog onOpenChange={setUpdateDialogIsOpen} open={updateDialogIsOpen}>
           <DialogTrigger asChild>
             <Button size='icon' variant='ghost'>
               <Edit />
@@ -57,7 +103,14 @@ export function TaskCard({ task }: TaskCardProps) {
                 account and remove your data from our servers.
               </DialogDescription>
             </DialogHeader>
-            <div>Aqui será o formulário</div>
+            <div className='grid gap-4 py-4'>
+              <div className='flex flex-col gap-2'>
+                <UpdateTaskForm
+                  onClose={() => setUpdateDialogIsOpen(false)}
+                  task={task}
+                />
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
         <AlertDialog>
@@ -77,7 +130,10 @@ export function TaskCard({ task }: TaskCardProps) {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction className='hover: bg-destructive bg-destructive/90 text-white'>
+              <AlertDialogAction
+                className='hover: bg-destructive bg-destructive/90 text-white'
+                onClick={handleDeleteTask}
+              >
                 Deletar
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -111,7 +167,10 @@ export function TaskCard({ task }: TaskCardProps) {
         </Carousel>
       </CardContent>
       <CardFooter className='flex justify-center'>
-        <Toggle pressed={task.completed}>
+        <Toggle
+          onPressedChange={handleChangeTaskCompletion}
+          pressed={task.completed}
+        >
           {task.completed ? <CheckCircle /> : <Circle />}
           {task.completed ? 'Marcar com pendente' : 'Marcar com concluída'}
         </Toggle>

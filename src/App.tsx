@@ -9,11 +9,11 @@ import {
 import { Header } from './components/header'
 import { PageContainer } from './components/page-container'
 import { PageContent } from './components/page-content'
+import { TaskCard } from './components/task-card'
 import { Input } from './components/ui/input'
 import { Label } from './components/ui/label'
-import { useTasksContext } from './contexts/tasks-context'
 import { Separator } from './components/ui/separator'
-import { TaskCard } from './components/task-card'
+import { useTasksContext } from './contexts/tasks-context'
 
 export function App() {
   const { data } = useTasksContext()
@@ -78,31 +78,30 @@ export function App() {
         )}
 
         {tasksPending.length > 0 && (
-          <div className='flex items-center gap-3'>
+          <div className='flex w-full items-center gap-3'>
             <h2>Pendentes</h2>
             <Separator />
           </div>
         )}
 
-        <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
+        <div className='grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3'>
           {tasksPending.map(task => (
             <TaskCard key={task.id} task={task} />
           ))}
         </div>
 
-          {tasksCompleted.length > 0 && (
-          <div className='flex items-center gap-3 my-3'>
+        {tasksCompleted.length > 0 && (
+          <div className='my-3 flex w-full items-center gap-3'>
             <h2>Concluídas</h2>
             <Separator />
           </div>
         )}
 
-         <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
+        <div className='grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3'>
           {tasksCompleted.map(task => (
             <TaskCard key={task.id} task={task} />
           ))}
         </div>
-        
       </PageContent>
     </PageContainer>
   )
